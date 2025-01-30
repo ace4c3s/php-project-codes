@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <h1>GRADING</h1>
+
+    <form action="index.php" method="POST">
+        <label for="subject">Math</label> <br>
+        <input type="number" name="math" id=""><br>
+        <label for="">Science</label> <br>
+        <input type="number" name="science" id=""><br>
+        <label for="">Arts</label> <br>
+        <input type="number" name="arts" id=""><br>
+        <label for="">Attendance (%)</label><br>
+        <input type="number" name="attendance" id=""><br>
+        <label for="">Participation (%)</label><br>
+        <input type="number" name="participation"><br>
+        <label for="">Favourite Subject</label><br>
+        <input type="text" name="fav_subject"><br>
+        <label for="">Years Enrolled</label><br>
+        <input type="number" name="years_enrolled"><br><br>
+        <!-- <label for="">Class Year Average</label><br>
+        <input type="number" name="class_year_average"><br><br> -->
+        <input type="submit" value="Calculate Grade"><br><br>
+    </form>
+    
+</body>
+</html>
+
+<?php
+   
+
+   // collect user input
+
+   $math = $_POST["math"];
+   $science = $_POST["science"];;
+   $arts = $_POST["arts"];;
+   $attendance = $_POST["attendance"];;
+   $participation = $_POST["participation"];;
+   $fav_subject = strtolower(trim($_POST["fav_subject"]));
+   $years_enrolled = $_POST["years_enrolled"];
+
+    // hardcoded class year average 
+   $class_year_average = 68;
+
+   // calculate the initial class average
+   $class_average = ($math + $science + $arts) / 3;
+   $final_average = $class_average;
+
+   // Adjust grade boundaries if needed
+
+   if($class_year_average < 70) {
+        // Adjust grade threshold by 5
+        $grade_thresholds = [
+            "A" => [95,100],
+            "B" => [85,94],
+            "C" => [75,84],
+            "D" => [65,74],
+            "F" => [0,64]
+        ];
+   } else {
+        $grade_thresholds = [
+            "A" => [90,100],
+            "B" => [80,89],
+            "C" => [70,79],
+            "D" => [60,69],
+            "F" => [0,59]
+        ];
+   }
+
+   // apply adjustments
+
+   $highest_score = max($math, $science, $arts);
+   $highest_subject = "";
+
+   if($math == $highest_score){
+        $highest_subject = "math";
+
+   } elseif($science == $highest_score) {
+        $highest_subject = "science";
+
+   } elseif ($arts == $highest_score){
+        $highest_subject = "arts";
+
+   }
+
+
+   if($fav_subject == $highest_subject){
+        $final_average += 2;
+   }
+   
+   //Loyalty bonus
+
+   if($years_enrolled > 1){
+        $final_average = ceil($final_average);
+   }
+
+
+   // Final average stays within range of 100
+
+   $final_average = max(0, min($final_average, 100));
+
+   // Default Grade
+
+   $grade = "F";
+
+   foreach($grade_thresholds as $key => $range){
+        if($final_average >= $range[0] && $final_average <= $range[1]){
+            $grade = $key;
+            break;
+        }
+   }
+
+   echo "Final Average: {$final_average} <br>";
+   echo "Grade: {$grade}";
+
+
+
+  
+
+  
+
+   
+  
+
+   
+?>
+
+
