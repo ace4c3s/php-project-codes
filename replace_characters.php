@@ -15,3 +15,10 @@
     }
 
 ?>
+
+//Alternative method, precise.
+
+function replace($s){
+    return str_ireplace(str_split("aeiouAEIOu"), "!" $s); //The str_split converts the string into an array. Each element becomes a substring of the original string.
+
+}
